@@ -50,6 +50,42 @@ root@vagrant:~# systemctl status rsyslog
      Loaded: loaded (/lib/systemd/system/rsyslog.service; enabled; vendor preset: enabled)
      Active: active (running) since Sun 2024-06-16 11:55:13 +04; 32s ago
 ```
-10. 
+10. Далее настроим отправку логов с web-сервера. Проверим версию nginx: ``` nginx -v ```
+```
+root@vagrant:~# nginx -v
+nginx version: nginx/1.18.0 (Ubuntu)
+```
+11. в файле /etc/nginx/nginx.conf раздел с логами и приводим их к следующему виду:
+12. ![alt text](./Pictures/2.png)
+13. **Заметка для себя**
+14. **Для Access-логов указываем удаленный сервер и уровень логов, которые нужно отправлять. Для error_log добавляем удаленный сервер. Если требуется чтобы логи хранились локально и отправлялись на удаленный сервер, требуется указать 2 строки. 	
+Tag нужен для того, чтобы логи записывались в разные файлы.
+По умолчанию, error-логи отправляют логи, которые имеют severity: error, crit, alert и emerg. Если требуется хранить или пересылать логи с другим severity, то это также можно указать в настройках nginx.**
+```
+root@vagrant:~# nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@vagrant:~# systemctl restart nginx
+```
+15. Попробуем несколько раз зайти по адресу http://192.168.56.10
+16. Далее заходим на log-сервер и смотрим информацию об nginx:
+```
+cat /var/log/rsyslog/web/nginx_access.log 
+cat /var/log/rsyslog/web/nginx_error.log 
+```
+17. Поскольку наше приложение работает без ошибок, файл nginx_error.log не будет создан. Чтобы сгенерировать ошибку, можно переместить файл веб-страницы, который открывает nginx - 
+mv /var/www/html/index.nginx-debian.html /var/www/ После этого мы получим 403 ошибку.
+18. ![alt text](./Pictures/3.png)
+19. и далее видим, что логи не отправляются..
+```
+root@vagrant:~# cat /var/log/rsyslog/web/nginx_access.log
+cat: /var/log/rsyslog/web/nginx_access.log: No such file or directory
+root@vagrant:~# cat /var/log/rsyslog/web/nginx_error.log
+cat: /var/log/rsyslog/web/nginx_error.log: No such file or directory
+ ```
+20. **Ошибку не нахожу- прошу подсказать где ошибся**
+
+
+
 
  
