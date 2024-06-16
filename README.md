@@ -25,5 +25,31 @@ Jun 16 11:33:07 vagrant systemd[1]: Started A high performance web server and a 
 root@vagrant:~# ss -tln | grep 80
 LISTEN 0      511          0.0.0.0:80        0.0.0.0:*
 LISTEN 0      511             [::]:80           [::]:*
-``` 
+```
+4. Настройка центрального сервера сбора логов   на машине **log**
+5. так же установим правильное время из под root
+6.  ``` apt list rsyslog ```
+7.  Все настройки Rsyslog хранятся в файле /etc/rsyslog.conf  - правим файл
+8.  Открываем порт 514 (TCP и UDP): Находим закомментированные строки:
+9.   ![alt text](./Pictures/1.png)
+```
+root@vagrant:~# systemctl restart rsyslog
+root@vagrant:~# ss -tuln
+Netid                State                 Recv-Q                Send-Q                                Local Address:Port                               Peer Address:Port               Process
+udp                  UNCONN                0                     0                                           0.0.0.0:514                                     0.0.0.0:*
+udp                  UNCONN                0                     0                                     127.0.0.53%lo:53                                      0.0.0.0:*
+udp                  UNCONN                0                     0                                    10.0.2.15%eth0:68                                      0.0.0.0:*
+udp                  UNCONN                0                     0                                              [::]:514                                        [::]:*
+tcp                  LISTEN                0                     25                                          0.0.0.0:514                                     0.0.0.0:*
+tcp                  LISTEN                0                     4096                                  127.0.0.53%lo:53                                      0.0.0.0:*
+tcp                  LISTEN                0                     128                                         0.0.0.0:22                                      0.0.0.0:*
+tcp                  LISTEN                0                     25                                             [::]:514                                        [::]:*
+tcp                  LISTEN                0                     128                                            [::]:22                                         [::]:*
+root@vagrant:~# systemctl status rsyslog
+● rsyslog.service - System Logging Service
+     Loaded: loaded (/lib/systemd/system/rsyslog.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2024-06-16 11:55:13 +04; 32s ago
+```
+10. 
+
  
