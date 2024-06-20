@@ -76,14 +76,21 @@ cat /var/log/rsyslog/web/nginx_error.log
 17. Поскольку наше приложение работает без ошибок, файл nginx_error.log не будет создан. Чтобы сгенерировать ошибку, можно переместить файл веб-страницы, который открывает nginx - 
 mv /var/www/html/index.nginx-debian.html /var/www/ После этого мы получим 403 ошибку.
 18. ![alt text](./Pictures/3.png)
-19. и далее видим, что логи не отправляются..
+19. и далее видим, что логи отправляются..
 ```
 root@vagrant:~# cat /var/log/rsyslog/web/nginx_access.log
-cat: /var/log/rsyslog/web/nginx_access.log: No such file or directory
+192.168.56.1 - - [20/Jun/2024:19:43:02 +0400] "GET / HTTP/1.1" 200 396 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0"
+192.168.56.1 - - [20/Jun/2024:19:44:17 +0400] "GET / HTTP/1.1" 403 134 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0"
+192.168.56.1 - - [20/Jun/2024:19:44:19 +0400] "GET / HTTP/1.1" 403 134 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0"
+192.168.56.1 - - [20/Jun/2024:19:46:42 +0400] "GET / HTTP/1.1" 403 134 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0"
+192.168.56.1 - - [20/Jun/2024:19:46:45 +0400] "GET / HTTP/1.1" 403 134 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0"
 root@vagrant:~# cat /var/log/rsyslog/web/nginx_error.log
-cat: /var/log/rsyslog/web/nginx_error.log: No such file or directory
- ```
-20. **Ошибку не нахожу- прошу подсказать где ошибся**
+
+2024/06/19 17:28:56 [notice] 3572#3572: using inherited sockets from "6;7;"
+2024/06/20 19:44:19 [error] 4276#4276: *1 directory index of "/var/www/html/" is forbidden, client: 192.168.56.1, server: _, request: "GET / HTTP/1.1", host: "192.168.56.10"
+2024/06/20 19:46:42 [error] 4276#4276: *3 directory index of "/var/www/html/" is forbidden, client: 192.168.56.1, server: _, request: "GET / HTTP/1.1", host: "192.168.56.10"
+2024/06/20 19:46:45 [error] 4276#4276: *3 directory index of "/var/www/html/" is forbidden, client: 192.168.56.1, server: _, request: "GET / HTTP/1.1", host: "192.168.56.10"
+```
 
 
 
